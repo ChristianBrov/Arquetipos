@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Personalidad</title>
+    <style>
+        :root {
+            --tema-color: #4CAF50; /* Verde por defecto */
+            --tema-bg: rgba(76, 175, 80, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+        h1 { margin-top: 0; color: var(--tema-color); transition: color 0.3s ease; }
+        p { margin-bottom: 30px; color: #b3b3b3; }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #2c2c2c;
+            color: white;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: var(--tema-color);
+        }
+
+        h3 { font-size: 16px; text-align: left; margin-bottom: 10px; color: #ddd; }
+        .options-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .options-group input[type="radio"] { display: none; }
+        .options-group label {
+            padding: 10px 18px;
+            background-color: #2c2c2c;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            border: 1px solid #333;
+        }
+        .options-group input[type="radio"]:checked + label {
+            background-color: var(--tema-color);
+            color: #121212;
+            font-weight: bold;
+            border-color: var(--tema-color);
+        }
+
+        .btn-option {
+            padding: 12px 5px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: 0.2s;
+            color: #fff;
+        }
+        input[type="radio"]:checked + .btn-option {
+            background-color: var(--tema-color);
+            color: #121212;
+            font-weight: bold;
+            border-color: var(--tema-color);
+        }
+
+        .btn-submit {
+            background-color: var(--tema-color);
+            color: #121212;
+            border: none;
+            padding: 16px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-submit:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+        .nota-sutil {
+            font-size: 12px;
+            color: #888;
+            margin-top: 12px;
+            margin-bottom: 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Descúbrete!</h1>
+        <p>Completá tu perfil para comenzar el test.</p>
+        
+        <form action="#" method="POST">
+            {% csrf_token %}
+            
+            <input type="text" name="nombre" placeholder="Tu nombre o apodo" required autocomplete="off">
+            
+            <h3>Tu Género</h3>
+            <div class="options-group">
+                <input type="radio" id="gen_m" name="genero" value="M" required class="radio-genero"><label for="gen_m">Masculino</label>
+                <input type="radio" id="gen_f" name="genero" value="F" class="radio-genero"><label for="gen_f">Femenino</label>
+            </div>
+
+            <h3>Tu Edad</h3>
+            <div class="options-group">
+                <input type="radio" id="e1" name="edad" value="< 20" required><label for="e1">&lt; 20</label>
+                <input type="radio" id="e2" name="edad" value="20 a 30"><label for="e2">20 a 30</label>
+                <input type="radio" id="e3" name="edad" value="31 a 40"><label for="e3">31 a 40</label>
+                <input type="radio" id="e4" name="edad" value="41 a 50"><label for="e4">41 a 50</label>
+                <input type="radio" id="e5" name="edad" value="> 50"><label for="e5">&gt; 50</label>
+            </div>
+
+            <h3>Música Favorita</h3>
+            <div class="music-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
+                <input type="radio" id="mus1" name="musica" value="Rock" required style="display: none;"><label for="mus1" class="btn-option">Rock</label>
+                <input type="radio" id="mus2" name="musica" value="Urbano/Pop" style="display: none;"><label for="mus2" class="btn-option">Urbano/Pop</label>
+                <input type="radio" id="mus3" name="musica" value="Cumbia/Cuarteto" style="display: none;"><label for="mus3" class="btn-option">Cumbia/Cuarteto</label>
+                <input type="radio" id="mus4" name="musica" value="Electronica" style="display: none;"><label for="mus4" class="btn-option">Electrónica</label>
+                <input type="radio" id="mus5" name="musica" value="Folklore" style="display: none;"><label for="mus5" class="btn-option">Folklore</label>
+            </div>
+
+            <button type="submit" class="btn-submit">¡Comenzar!</button>
+            <span class="nota-sutil">Es solo un test para divertirse y compartir!</span>
+        </form>
+    </div>
+    
+    <script>
+        // Script para cambiar el color del tema en tiempo real según el género
+        const radiosGenero = document.querySelectorAll('.radio-genero');
+        radiosGenero.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if(this.value === 'M') {
+                    document.documentElement.style.setProperty('--tema-color', '#00d2ff'); // Azul eléctrico
+                    document.documentElement.style.setProperty('--tema-bg', 'rgba(0, 210, 255, 0.2)');
+                } else if(this.value === 'F') {
+                    document.documentElement.style.setProperty('--tema-color', '#ff00ff'); // Magenta
+                    document.documentElement.style.setProperty('--tema-bg', 'rgba(255, 0, 255, 0.2)');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

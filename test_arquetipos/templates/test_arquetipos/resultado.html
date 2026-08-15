@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Resultado - Test de Arquetipos</title>
+    <style>
+        :root {
+            {% if request.session.usuario_genero == 'M' %}
+                --tema-color: #00d2ff;
+                --tema-bg: rgba(0, 210, 255, 0.2);
+            {% elif request.session.usuario_genero == 'F' %}
+                --tema-color: #ff00ff;
+                --tema-bg: rgba(255, 0, 255, 0.2);
+            {% else %}
+                --tema-color: #4CAF50;
+                --tema-bg: rgba(76, 175, 80, 0.2);
+            {% endif %}
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            margin: 20px 0;
+        }
+        h1 { color: var(--tema-color); margin-top: 0; font-size: 28px; }
+        
+        .card-result {
+            background-color: #2c2c2c;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        /* PESO VISUAL: MUY DESTACADO (Arquetipo Principal) */
+        .arquetipo-title {
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--tema-color);
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .keyword {
+            display: inline-block;
+            background-color: var(--tema-bg);
+            color: var(--tema-color);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        /* Cajas de Información Base */
+        .info-box {
+            background-color: #252525;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+            border-top-style: solid;
+        }
+        .label {
+            font-size: 15px;
+            font-weight: normal;
+            color: #ddd;
+            display: inline;
+        }
+        .value {
+            display: block;
+            font-weight: bold;
+        }
+
+        /* PESO VISUAL: DESTACADO (Famoso y Crush) */
+        .info-box.destacado {
+            padding: 22px 15px;
+            border-top-width: 4px;
+            background-color: #2a2a2a;
+        }
+        .info-box.destacado .value {
+            font-size: 26px;
+            margin-top: 10px;
+        }
+
+        /* PESO VISUAL: MEDIO (Tema y Otra Mitad) */
+        .info-box.medio {
+            padding: 15px;
+            border-top-width: 2px;
+        }
+        .info-box.medio .value {
+            font-size: 18px;
+            margin-top: 6px;
+        }
+
+        /* Colores específicos de cada bloque */
+        .famoso-box { border-top-color: #f1c40f; }
+        .music-box { border-top-color: #9b59b6; }
+        .duo-box { border-top-color: var(--tema-color); }
+        .crush-box { border-top-color: #ff6b81; }
+
+        .famoso-box .value { color: #ffffff; }
+        .music-box .value { color: #b184c8; }
+        .duo-box .value { color: var(--tema-color); }
+        .crush-box .value { color: #ff6b81; }
+        
+        /* Lista dinámica de la descripción */
+        .desc-list {
+            text-align: left;
+            margin: 25px 0;
+            padding: 20px 0;
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+        }
+        .desc-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 17px;
+            color: #d3d3d3;
+            line-height: 1.5;
+        }
+        .desc-item span.bullet {
+            margin-right: 10px;
+            font-size: 18px;
+            color: var(--tema-color);
+        }
+
+        .btn-restart {
+            display: inline-block;
+            background-color: var(--tema-color);
+            color: #121212;
+            text-decoration: none;
+            padding: 16px 35px;
+            font-size: 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+        .btn-restart:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        .btn-donar {
+            display: block;
+            width: max-content;
+            margin: 15px auto 0;
+            background-color: #4682B4; 
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .btn-donar:hover { background-color: #3b6b94; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Felicitaciones, {{ nombre }}!</h1>
+        
+        <div class="card-result">
+            {% if arquetipo %}
+                <div class="keyword">{{ arquetipo.palabra_clave }}</div>
+                <div class="arquetipo-title">
+                    {% if request.session.usuario_genero == 'M' %}
+                        El {{ arquetipo.nombre }}
+                    {% elif request.session.usuario_genero == 'F' %}
+                        La {{ arquetipo.nombre }}
+                    {% else %}
+                        El/La {{ arquetipo.nombre }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if descripcion %}
+                <div class="desc-list" id="desc-container"></div>
+                <div id="desc-raw" style="display: none;">{{ descripcion.texto|linebreaksbr }}</div>
+            {% endif %}
+
+            <!-- ORDEN 1: Sos como (DESTACADO) -->
+            {% if famoso %}
+                <div class="info-box famoso-box destacado">
+                    🌟 <span class="label">Sos como:</span>
+                    <span class="value">{{ famoso.nombre }}</span>
+                </div>
+            {% endif %}
+
+            <!-- ORDEN 2: Tu tema (MEDIO) -->
+            {% if duo and duo.cancion_identidad %}
+                <div class="info-box music-box medio">
+                    🎵 <span class="label">Tu tema sin dudas:</span>
+                    <span class="value">{{ duo.cancion_identidad }}</span>
+                </div>
+            {% endif %}
+
+            <!-- ORDEN 3: Tu otra mitad (MEDIO) -->
+            {% if duo %}
+                <div class="info-box duo-box medio">
+                    🤝 <span class="label">Tu otra mitad es:</span>
+                    <span class="value">
+                        {% if duo.arquetipo_match.genero_articulo == 'F' %}La{% else %}El{% endif %} {{ duo.arquetipo_match.nombre }}
+                    </span>
+                </div>
+            {% endif %}
+
+            <!-- ORDEN 4: Tu pareja ideal (DESTACADO) -->
+            {% if crush %}
+                <div class="info-box crush-box destacado">
+                    💘 <span class="label">Tu pareja ideal:</span>
+                    <span class="value">{{ crush.nombre }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'inicio' %}" class="btn-restart">Volver a Jugar ↺</a>
+        
+        <a href="#" class="btn-donar" target="_blank">Para donar 😊</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rawDesc = document.getElementById('desc-raw');
+            const containerDesc = document.getElementById('desc-container');
+            
+            if (rawDesc && containerDesc) {
+                const lines = rawDesc.innerHTML.split('<br>').map(l => l.trim()).filter(l => l.length > 0);
+                containerDesc.innerHTML = lines.map(line => `
+                    <div class="desc-item">
+                        <span class="bullet">👉</span> 
+                        <div>${line}</div>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+</html>

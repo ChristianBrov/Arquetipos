@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta {{ numero_pregunta }} - Test</title>
+    <style>
+        :root {
+            {% if request.session.usuario_genero == 'M' %}
+                --tema-color: #00d2ff;
+                --tema-bg: rgba(0, 210, 255, 0.2);
+            {% elif request.session.usuario_genero == 'F' %}
+                --tema-color: #ff00ff;
+                --tema-bg: rgba(255, 0, 255, 0.2);
+            {% else %}
+                --tema-color: #4CAF50;
+                --tema-bg: rgba(76, 175, 80, 0.2);
+            {% endif %}
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            height: 6px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--tema-color);
+            width: {{ progreso }}%;
+            transition: width 0.3s ease;
+        }
+        .step-indicator {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h2 { font-size: 20px; margin-bottom: 30px; line-height: 1.4; color: #fff; }
+        
+        .scale-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+        .scale-group input[type="radio"] { display: none; }
+        .scale-group label {
+            flex: 1;
+            padding: 15px 5px;
+            background-color: #2c2c2c;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid #333;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .scale-group input[type="radio"]:checked + label {
+            background-color: var(--tema-color);
+            color: #121212;
+            font-weight: bold;
+            border-color: var(--tema-color);
+        }
+        .btn-next {
+            background-color: var(--tema-color);
+            color: #121212;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-next:hover { filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="step-indicator">Pregunta {{ numero_pregunta }} de {{ total_preguntas }}</div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        {% if pregunta.multiplicador == 0 %}
+            <!-- DISEÑO PREGUNTA ÍNTIMA / DIVERTIDA -->
+            <h3 style="color: #ff4757; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">⚠️ ¡Cuidado!</h3>
+            <h2 style="color: #ff6b81; font-size: 22px;">{{ pregunta.texto_pregunta }}</h2>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="scale-group" style="flex-direction: column; gap: 15px;">
+                    <input type="radio" id="opt_intima_1" name="respuesta" value="3" required>
+                    <label for="opt_intima_1" style="padding: 20px; font-size: 16px;">😇 No sé qué es eso</label>
+                    
+                    <input type="radio" id="opt_intima_2" name="respuesta" value="3">
+                    <label for="opt_intima_2" style="padding: 20px; font-size: 16px;">😏 Fue sin querer queriendo</label>
+                </div>
+                <button type="submit" class="btn-next" style="margin-top: 20px;">Siguiente ➔</button>
+            </form>
+        {% else %}
+            <!-- DISEÑO PREGUNTA NORMAL -->
+            <h2>{{ pregunta.texto_pregunta }}</h2>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="scale-group">
+                    <input type="radio" id="opt1" name="respuesta" value="1" required><label for="opt1">Muy en desacuerdo</label>
+                    <input type="radio" id="opt2" name="respuesta" value="2"><label for="opt2">Algo desacuerdo</label>
+                    <input type="radio" id="opt3" name="respuesta" value="3"><label for="opt3">Me da igual</label>
+                    <input type="radio" id="opt4" name="respuesta" value="4"><label for="opt4">Algo de acuerdo</label>
+                    <input type="radio" id="opt5" name="respuesta" value="5"><label for="opt5">Muy de acuerdo</label>
+                </div>
+
+                <button type="submit" class="btn-next">Siguiente ➔</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
