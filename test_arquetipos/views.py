@@ -113,6 +113,33 @@ def resultado_final(request):
         except Arquetipo.DoesNotExist:
             pass
 
+    # ---------- NUEVA LÓGICA DE GÉNERO ----------
+    nombre_mostrar = ""
+    if arquetipo_ganador_obj:
+        nombre_base = arquetipo_ganador_obj.nombre.strip().upper()
+        
+        if genero_usuario == 'F':
+            nombres_femeninos = {
+                "GUARDIAN": "LA GUARDIANA",
+                "EXPLORADOR": "LA EXPLORADORA",
+                "VISIONARIO": "LA VISIONARIA",
+                "IMPULSOR": "LA IMPULSORA",
+                "ANALISTA": "LA ANALISTA",
+                "ESTRATEGA": "LA ESTRATEGA"
+            }
+            nombre_mostrar = nombres_femeninos.get(nombre_base, f"LA {nombre_base}")
+        else:
+            nombres_masculinos = {
+                "GUARDIAN": "EL GUARDIAN",
+                "EXPLORADOR": "EL EXPLORADOR",
+                "VISIONARIO": "EL VISIONARIO",
+                "IMPULSOR": "EL IMPULSOR",
+                "ANALISTA": "EL ANALISTA",
+                "ESTRATEGA": "EL ESTRATEGA"
+            }
+            nombre_mostrar = nombres_masculinos.get(nombre_base, f"EL {nombre_base}")
+    # --------------------------------------------
+
     # 1. Buscamos el Dúo Dinámico aleatorio
     duo_encontrado = None
     if arquetipo_ganador_obj:
@@ -165,6 +192,7 @@ def resultado_final(request):
     return render(request, 'test_arquetipos/resultado.html', {
         'nombre': nombre,
         'arquetipo': arquetipo_ganador_obj,
+        'nombre_mostrar': nombre_mostrar,  # <-- Enviamos el nombre corregido al template
         'descripcion': descripcion_dinamica,
         'duo': duo_encontrado,
         'famoso': famoso_encontrado,

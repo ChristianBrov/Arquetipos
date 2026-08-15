@@ -179,14 +179,10 @@
         <div class="card-result">
             {% if arquetipo %}
                 <div class="keyword">{{ arquetipo.palabra_clave }}</div>
+                
+                <!-- ACÁ SE APLICÓ EL CAMBIO PARA EL NOMBRE CON GÉNERO CORRECTO -->
                 <div class="arquetipo-title">
-                    {% if request.session.usuario_genero == 'M' %}
-                        El {{ arquetipo.nombre }}
-                    {% elif request.session.usuario_genero == 'F' %}
-                        La {{ arquetipo.nombre }}
-                    {% else %}
-                        El/La {{ arquetipo.nombre }}
-                    {% endif %}
+                    {{ nombre_mostrar }}
                 </div>
             {% endif %}
 
@@ -232,7 +228,8 @@
 
         <a href="{% url 'inicio' %}" class="btn-restart">Volver a Jugar ↺</a>
         
-        <a href="#" class="btn-donar" target="_blank">Para donar 😊</a>
+        <!-- ACÁ SE APLICÓ EL CAMBIO DEL LINK DE DONACIÓN -->
+        <a href="https://link.mercadopago.com.ar/tupersona" class="btn-donar" target="_blank">Para donar 😊</a>
     </div>
 
     <script>
